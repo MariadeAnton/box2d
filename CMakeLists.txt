@@ -6,17 +6,19 @@ IF(BIICODE)
   ADD_BIICODE_TARGETS()
   TARGET_INCLUDE_DIRECTORIES(${BII_LIB_TARGET} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-  IF (UNIX)
-     IF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Testbed")
-  add_definitions( -D__unix__ -DHAVE_FCNTL_H -DHAVE_GETTIMEOFDAY )
-        TARGET_LINK_LIBRARIES(${BII_LIB_TARGET} PUBLIC pthread X11)
-        find_package(OpenGL REQUIRED)
-     ENDIF()
-  ENDIF()        
+  IF (UNIX AND TARGET erincatto_box2d_Testbed_Framework_Main)
+		find_package(X11 REQUIRED)
+		IF(APPLE)
+			TARGET_LINK_LIBRARIES(erincatto_box2d_Testbed_Framework_Main PUBLIC ${X11_LIBRARY_DIR})
+		ELSE()
+			add_definitions( -D__unix__ -DHAVE_FCNTL_H -DHAVE_GETTIMEOFDAY )
+			TARGET_LINK_LIBRARIES(erincatto_box2d_Testbed_Framework_Main PUBLIC X11)
+		ENDIF()
+  ENDIF(UNIX)
+
 
 ELSE()
   cmake_minimum_required(VERSION 2.6)
-
   project(Box2D)
 
   if(UNIX)
